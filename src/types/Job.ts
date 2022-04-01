@@ -8,6 +8,7 @@ interface Job {
   pinned: boolean;
   title: string;
   location: string;
+  desc: string;
   company: Company;
   tags: Tag[];
 }

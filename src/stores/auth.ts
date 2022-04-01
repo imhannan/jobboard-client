@@ -13,6 +13,11 @@ export const useAuthStore = defineStore({
     isLoggedIn: false,
     user: {} as User,
   }),
+  getters: {
+    getCurrentUser(state) {
+      return state.user;
+    },
+  },
   actions: {
     async initAuth() {
       const auth = await getAuth();
@@ -49,6 +54,7 @@ export const useAuthStore = defineStore({
       email: string;
       password: string;
       password_confirmation: string;
+      role: string;
     }) {
       this.loading = true;
       const data = await register(form);

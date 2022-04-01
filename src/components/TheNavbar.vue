@@ -28,7 +28,10 @@ const logout = async function () {
 
     <nav v-if="isLoggedIn" class="flex items-center gap-4">
       <router-link class="text-base" to="/"> My posts </router-link>
-      <router-link class="flex rounded-md bg-indigo-500 p-2 text-white" to="/">
+      <router-link
+        class="flex rounded-md bg-indigo-500 p-2 text-white"
+        :to="{ name: 'jobs.create' }"
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           class="h-5 w-5"
@@ -67,6 +70,11 @@ const logout = async function () {
               to="/"
               class="rounded-md bg-white p-2 duration-300 hover:bg-gray-200"
               >Settings</router-link
+            >
+            <router-link
+              to="/applications"
+              class="rounded-md bg-white p-2 duration-300 hover:bg-gray-200"
+              >Applications</router-link
             >
             <button
               @click="logout"

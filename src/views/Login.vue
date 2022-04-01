@@ -5,6 +5,7 @@ import { useRouter } from "vue-router";
 import { required, email, minLength, maxLength } from "@vuelidate/validators";
 import { useAuthStore } from "@/stores/auth";
 import DefaultLayout from "@/layouts/DefaultLayout.vue";
+import LoadingButton from "@/components/loading/LoadingButton.vue";
 
 const authStore = useAuthStore();
 const router = useRouter();
@@ -80,7 +81,13 @@ const v$ = useVuelidate(rules, form, {
         </ul>
       </div>
 
-      <button class="rounded-md bg-indigo-500 p-2 text-white">Login</button>
+      <button
+        class="flex items-center justify-center rounded-md bg-indigo-500 p-2 text-white"
+        :disabled="authStore.loading"
+      >
+        <loading-button v-if="authStore.loading" />
+        Login
+      </button>
     </form>
   </default-layout>
 </template>

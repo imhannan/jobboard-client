@@ -20,7 +20,9 @@ if (hasItem("token")) {
 export const login = async (form: { email: string; password: string }) => {
   try {
     const res = await instance.post("/login", form);
-    console.log(res.data);
+    instance.defaults.headers.common[
+      "Authorization"
+    ] = `Bearer ${res.data.token}`;
     return res.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -36,9 +38,15 @@ export const register = async (form: {
   email: string;
   password: string;
   password_confirmation: string;
+  role: string;
 }) => {
   try {
-    const res = await instance.post("/register", form);
+    const res = await instance.post(`/register?role=${form.role}`, {
+      name: form.name,
+      email: form.email,
+      password: form.password,
+      password_confirmation: form.password_confirmation,
+    });
     if (res.status === 201) {
       return res.data;
     }

@@ -1,13 +1,14 @@
-import type JobCollection from "@/types/JobCollection";
 import axios, { type AxiosError } from "axios";
 import { useMainStore } from "@/stores/main";
-import type Job from "@/types/Job";
+import { useAuthStore } from "@/stores/auth";
 
 const instance = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",
+    Authorization:
+      "Bearer " + (useAuthStore().token || localStorage.getItem("token") || ""),
   },
 });
 
@@ -37,14 +38,14 @@ instance.interceptors.response.use(
   }
 );
 
-const job = {
+const application = {
   async getAll(page?: number) {
     try {
       if (page) {
-        const { data } = await instance.get(`/jobs?page=${page}`);
+        const { data } = await instance.get(`/applications?page=${page}`);
         return data;
       }
-      const { data } = await instance.get<JobCollection>("/jobs");
+      const { data } = await instance.get("/applications");
       return data;
     } catch (err) {
       if (axios.isAxiosError(err)) {
@@ -57,8 +58,21 @@ const job = {
 
   async getSingle(slug: string) {
     try {
-      const { data } = await instance.get<{ job: Job }>(`/jobs/${slug}`);
-      return data.job;
+      const { data } = await instance.get(`/applications/${slug}`);
+      return data;
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+        handleError(err);
+      } else {
+        throw err;
+      }
+    }
+  },
+
+  async create(slug: string, application: any) {
+    try {
+      const { data } = await instance.post(`/jobs/${slug}/apply`, application);
+      return data;
     } catch (err) {
       if (axios.isAxiosError(err)) {
         handleError(err);
@@ -87,4 +101,4 @@ const handleError = (err: AxiosError) => {
     console.log("Error", err.message);
   }
 };
-export default job;
+export default application;

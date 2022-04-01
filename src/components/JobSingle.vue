@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type Job from "@/types/Job";
-
+import { useAuthStore } from "@/stores/auth";
+const auth = useAuthStore();
 const props = defineProps<{ job: Job }>();
 </script>
 <template>
@@ -11,7 +12,7 @@ const props = defineProps<{ job: Job }>();
     <img :src="job.company.logo" class="mr-4 h-12 w-12" />
 
     <div class="flex w-full flex-wrap items-center justify-between">
-      <div class="mb-2 w-full md:w-4/12">
+      <div class="mb-2">
         <div class="flex items-center">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -60,37 +61,36 @@ const props = defineProps<{ job: Job }>();
       </div>
 
       <div class="mb-2">
-        <slot name="action">
-          <div class="flex gap-2 opacity-100 transition-opacity duration-200">
-            <router-link
-              v-if="true"
-              to="/"
-              class="inline-block rounded-lg border-2 border-indigo-400 bg-white px-3 py-2 font-bold text-indigo-400 hover:text-opacity-80"
-            >
-              Edit
-            </router-link>
-            <button
-              v-if="true"
-              class="inline-block rounded-lg border-2 border-red-400 bg-white px-3 py-2 font-bold text-red-400 hover:text-opacity-80"
-            >
-              Delete
-            </button>
-            <router-link
-              v-if="true"
-              to="/"
-              class="inline-block rounded-lg border-2 border-indigo-400 bg-white px-3 py-2 font-bold text-indigo-400 hover:text-opacity-80"
-            >
-              Details
-            </router-link>
-            <a
-              target="_blank"
-              :href="job.link"
-              class="inline-block rounded-lg border-2 border-indigo-400 bg-white px-3 py-2 font-bold text-indigo-400 hover:text-opacity-80"
-            >
-              Apply for this job
-            </a>
-          </div>
-        </slot>
+        <div class="flex gap-2 opacity-100 transition-opacity duration-200">
+          <router-link
+            v-if="job.company.id == auth.user.profile?.id"
+            :to="{ name: 'jobs.edit', params: { slug: job.slug } }"
+            class="inline-block rounded-lg border-2 border-indigo-400 bg-white px-3 py-2 font-bold text-indigo-400 hover:text-opacity-80"
+          >
+            Edit
+          </router-link>
+          <router-link
+            :to="{ name: 'jobs.delete', params: { slug: job.slug } }"
+            v-if="job.company.id == auth.user.profile?.id"
+            class="inline-block rounded-lg border-2 border-red-400 bg-white px-3 py-2 font-bold text-red-400 hover:text-opacity-80"
+          >
+            Delete
+          </router-link>
+          <router-link
+            v-if="true"
+            :to="{ name: 'jobs.details', params: { slug: job.slug } }"
+            class="inline-block rounded-lg border-2 border-indigo-400 bg-white px-3 py-2 font-bold text-indigo-400 hover:text-opacity-80"
+          >
+            Details
+          </router-link>
+          <router-link
+            v-if="auth.user.role === 'developer'"
+            :to="{ name: 'jobs.apply', params: { slug: job.slug } }"
+            class="inline-block rounded-lg border-2 border-indigo-400 bg-white px-3 py-2 font-bold text-indigo-400 hover:text-opacity-80"
+          >
+            Apply for this job
+          </router-link>
+        </div>
       </div>
     </div>
   </div>

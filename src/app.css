@@ -1,3 +1,24 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+ .form-group {
+  @apply flex flex-col space-y-2;
+ }
+ .form-control {
+  @apply rounded-md border-2 border-gray-300;
+ }
+
+ .error {
+  @apply text-red-500;
+ }
+
+ .btn {
+     @apply p-2 rounded-md;
+ }
+
+ .btn-primary {
+     @apply bg-indigo-500 hover:bg-indigo-600 text-white;
+ }
+}

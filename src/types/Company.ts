@@ -1,4 +1,5 @@
 interface Company {
+  id: number;
   fullName: string;
   logo: string;
   website: string;
